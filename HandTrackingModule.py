@@ -9,7 +9,6 @@ class handDetector:
         self.maxHands = maxHands               #Sets the maximum number of hands that the model will detect in a single frame.
         self.detectionCon = detectionCon       #Specifies the minimum confidence level required for the model to consider a hand detection as valid
         self.trackCon = trackCon               #Sets the minimum confidence level required for the model to track a detected hand across frames.
-
         self.mpHands = mp.solutions.hands              
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, 1, self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
@@ -42,19 +41,16 @@ class handDetector:
 def main():
     pTime = 0
     cap = cv2.VideoCapture(0)         #video capture
-
     if not cap.isOpened():
         print("Error: Unable to access the webcam.")
         return
 
     detector = handDetector()            #Initializes the handDetector object
-
     while True:
         success, img = cap.read()
         if not success:
             print("Error: Unable to read frame from webcam.")
             break
-
         img = detector.findHands(img)
         lmList = detector.findPos(img)
 
@@ -64,9 +60,7 @@ def main():
         cTime = time.time()
         fps = 1 / (cTime - pTime)
         pTime = cTime
-
         cv2.putText(img, f'FPS: {int(fps)}', (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
-
         cv2.imshow("Image", img)    #displays the FPS on the output video
         if cv2.waitKey(1) & 0xFF == ord('q'):  # Exit on 'q' key
             break
